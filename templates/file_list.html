@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>已上传文件</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">已上传文件</h1>
+        <form action="{{ url_for('convert_file') }}" method="post">
+            <ul class="list-group">
+                {% for filename in files %}
+                    <li class="list-group-item">
+                        <input type="checkbox" name="filenames" value="{{ filename }}">
+                        {{ filename }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit" class="btn btn-primary mt-3">转换选中文件</button>
+        </form>
+        {% if markdown_files %}
+            <h3 class="mt-5">转换后的文件</h3>
+            <form action="{{ url_for('download_all') }}" method="post">
+                <ul class="list-group">
+                    {% for filename in markdown_files %}
+                        <li class="list-group-item">
+                            <input type="checkbox" name="filenames" value="{{ filename }}">
+                            {{ filename }}
+                            <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-success btn-sm float-right">下载</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="submit" class="btn btn-primary mt-3">批量下载</button>
+            </form>
+        {% endif %}
+        <div class="mt-3">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">返回上传页面</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档转Markdown</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 使用相对路径添加Favicon -->
+    <link rel="icon" href="https://www.runoob.com/wp-content/uploads/2019/03/iconfinder_markdown_298823.png" type="image/x-icon">
+    <link rel="shortcut icon" href=" https://www.runoob.com/wp-content/uploads/2019/03/iconfinder_markdown_298823.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">文档转Markdown</h1>
+
+        <!-- 添加图片 -->
+        <div class="text-center">
+            <img src="https://picture.gptkong.com/20240604/22485b1e3ed546421e904c0634bac1f331.png" style="width: 30%;" alt="Logo">
+        </div>
+
+        <!-- 添加说明文字 -->
+        <p class="text-center">支持将PDF和Word文档转换为Markdown格式。</p>
+        <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">选择文件</label>
+                <input type="file" class="form-control-file" id="file" name="files[]" multiple>
+            </div>
+            <div class="form-group">
+                <label for="folder">选择文件夹</label>
+                <input type="file" class="form-control-file" id="folder" name="folder[]" multiple webkitdirectory directory>
+            </div>
+            <button type="submit" class="btn btn-primary">上传并转换</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info mt-3">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% if markdown_files %}
+            <h3 class="mt-5">转换后的文件</h3>
+            <form action="{{ url_for('download_all') }}" method="post">
+                <ul class="list-group">
+                    {% for filename in markdown_files %}
+                        <li class="list-group-item">
+                            <input type="checkbox" name="filenames" value="{{ filename }}">
+                            {{ filename }}
+                            <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-success btn-sm float-right">下载</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="submit" class="btn btn-primary mt-3">批量下载</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
